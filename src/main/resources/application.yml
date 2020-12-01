@@ -1,0 +1,48 @@
+spring:
+  # https://blog.csdn.net/w57685321/article/details/106823660
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  datasource:
+    dynamic:
+      druid: #以下是全局默认值，可以全局更改
+        #监控统计拦截的filters
+        filters: stat
+        #配置初始化大小/最小/最大
+        initial-size: 1
+        min-idle: 1
+        max-active: 20
+        #获取连接等待超时时间
+        max-wait: 60000
+        #间隔多久进行一次检测，检测需要关闭的空闲连接
+        time-between-eviction-runs-millis: 60000
+        #一个连接在池中最小生存的时间
+        min-evictable-idle-time-millis: 300000
+        validation-query: SELECT 'x'
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
+        pool-prepared-statements: false
+        max-pool-prepared-statement-per-connection-size: 20
+        stat:
+          merge-sql: true
+          log-slow-sql: true
+      primary: mysqldb #设置默认的数据源或者数据源组,默认值即为master
+      strict: false #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
+      datasource:
+        oracledb:
+          url: jdbc:oracle:thin:@127.0.0.1:1521:ORCL
+          driver-class-name: oracle.jdbc.driver.OracleDriver
+          username: scott
+          password: tiger
+          druid: # 以下参数针对每个库可以重新设置druid参数
+            initial-size:
+            validation-query: select 1 FROM DUAL #比如oracle就需要重新设置这个
+        mysqldb:
+          url: jdbc:mysql://127.0.0.1:3306/demo?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          username: root
+          password: 123456
+#mybatis:
+##  type-aliases-package: dev.tioachan.dataPickerHelper.domain
+#  mapper-locations: mapper/*.xml
